@@ -10,8 +10,7 @@ import springbook.user.domain.User;
 public class UserDao {
 	
 	public void add(User user) throws SQLException, ClassNotFoundException {
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection connection = DriverManager.getConnection("jdbc:mysql://54.178.137.153:3306/springPractice", "yoon", "spring");
+		Connection connection = getConnection();
 		
 		PreparedStatement preparedStatement = connection.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
 		preparedStatement.setString(1,  user.getId());
@@ -25,8 +24,7 @@ public class UserDao {
 	}
 	
 	public User get(String id) throws ClassNotFoundException, SQLException {
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection connection = DriverManager.getConnection("jdbc:mysql://54.178.137.153:3306/springPractice", "yoon", "spring");
+		Connection connection = getConnection();
 		
 		PreparedStatement preparedStatement = connection.prepareStatement("select * from users where id = ?");
 		
@@ -44,5 +42,11 @@ public class UserDao {
 		connection.close();
 		
 		return user;
+	}
+
+	private Connection getConnection() throws ClassNotFoundException, SQLException {
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection connection = DriverManager.getConnection("jdbc:mysql://54.178.137.153:3306/springPractice", "yoon", "spring");
+		return connection;
 	}
 }
