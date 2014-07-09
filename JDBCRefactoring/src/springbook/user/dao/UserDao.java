@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import springbook.user.domain.User;
 
-public class UserDao {
+public abstract class UserDao {
 	
 	public void add(User user) throws SQLException, ClassNotFoundException {
 		Connection connection = getConnection();
@@ -44,9 +44,5 @@ public class UserDao {
 		return user;
 	}
 
-	private Connection getConnection() throws ClassNotFoundException, SQLException {
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection connection = DriverManager.getConnection("jdbc:mysql://54.178.137.153:3306/springPractice", "yoon", "spring");
-		return connection;
-	}
+	public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
 }
