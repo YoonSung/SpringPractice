@@ -4,10 +4,10 @@ public class DefaultMessageRenderer implements MessageRenderer {
 	
 	MessageProvider messageProvider;
 	
-	public DefaultMessageRenderer(MessageProvider messageProvider) {
+	public void setMessageProvider(MessageProvider messageProvider) {
 		this.messageProvider = messageProvider;
 	}
-
+	
 	public void render() {
 		System.out.println(this.messageProvider.getMessage());
 	}

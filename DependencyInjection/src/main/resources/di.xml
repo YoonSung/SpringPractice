@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="messageProvider" class="practice.di.HelloWorldMessageProvider" />
+	<bean id="messageRenderer" class="practice.di.DefaultMessageRenderer">
+		<!-- <constructor-arg name="mp" ref="messageProvider"/> -->
+		<property name="messageProvider" ref="messageProvider"></property>
+		<!-- property name을 다르게 하면 에러가 발생한다. 왜? -->
+	</bean>
+</beans>
