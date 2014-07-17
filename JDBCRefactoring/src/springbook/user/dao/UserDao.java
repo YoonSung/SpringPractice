@@ -9,9 +9,15 @@ import springbook.user.domain.User;
 public class UserDao {
 	
 	private ConnectionMaker connectionMaker;
+
+//	의존성 주입
+//	public UserDao(ConnectionMaker connectionMaker) {
+//		this.connectionMaker = connectionMaker;
+//	}
 	
-	public UserDao(ConnectionMaker connectionMaker) {
-		this.connectionMaker = connectionMaker;
+	public UserDao() {
+		DaoFactory daoFactory = new DaoFactory();
+		this.connectionMaker = daoFactory.connectionMaker();
 	}
 	
 	public void add(User user) throws SQLException, ClassNotFoundException {
