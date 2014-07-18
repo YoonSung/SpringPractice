@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import springbook.user.domain.User;
 
 public class UserDao {
@@ -15,9 +17,17 @@ public class UserDao {
 //		this.connectionMaker = connectionMaker;
 //	}
 	
+//	DaoFactory방식
+//	public UserDao() {
+//		DaoFactory daoFactory = new DaoFactory();
+//		this.connectionMaker = daoFactory.connectionMaker();
+//	}
+	
+//	의존관계 검색을 이용하는 방식
 	public UserDao() {
-		DaoFactory daoFactory = new DaoFactory();
-		this.connectionMaker = daoFactory.connectionMaker();
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+		this.connectionMaker = context.getBean("connectionMaker", ConnectionMaker.class);
+		context.close();
 	}
 	
 	public void add(User user) throws SQLException, ClassNotFoundException {
