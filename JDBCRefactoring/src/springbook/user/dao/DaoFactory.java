@@ -10,7 +10,13 @@ public class DaoFactory {
 	public UserDao userDao() {
 		//의존성 주입방식
 		//return new UserDao(connectionMaker());
-		return new UserDao();
+		
+//		DaoFactory방식 1. (생성자)
+		//return new UserDao();
+		
+		UserDao userDao = new UserDao();
+		userDao.setConnectionMaker(connectionMaker());
+		return userDao;
 	}
 	
 	@Bean

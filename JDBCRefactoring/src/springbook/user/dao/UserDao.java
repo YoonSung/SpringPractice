@@ -17,11 +17,11 @@ public class UserDao {
 //		this.connectionMaker = connectionMaker;
 //	}
 	
-//	DaoFactory방식
-	public UserDao() {
-		DaoFactory daoFactory = new DaoFactory();
-		this.connectionMaker = daoFactory.connectionMaker();
-	}
+//	DaoFactory방식 1. (생성자)
+//	public UserDao() {
+//		DaoFactory daoFactory = new DaoFactory();
+//		this.connectionMaker = daoFactory.connectionMaker();
+//	}
 	
 //	의존관계 검색을 이용하는 방식
 //	public UserDao() {
@@ -29,6 +29,11 @@ public class UserDao {
 //		this.connectionMaker = context.getBean("connectionMaker", ConnectionMaker.class);
 //		context.close();
 //	}
+	
+//DaoFactory방식 2. (수정자)	
+	public void setConnectionMaker(ConnectionMaker connectionMaker) {
+		this.connectionMaker = connectionMaker;
+	}
 	
 	public void add(User user) throws SQLException, ClassNotFoundException {
 		Connection connection = connectionMaker.makeConnection();
