@@ -7,6 +7,8 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import springbook.user.domain.User;
@@ -20,8 +22,8 @@ public class UserDaoTest {
 	
 	@Before
 	public void setUp() {
-		DaoFactory daoFactory = new DaoFactory();
-		dao = daoFactory.userDao();
+		ApplicationContext context = new ClassPathXmlApplicationContext("classpath:/applicationContext.xml");
+		dao = context.getBean("userDao", UserDao.class);
 		user1 = new User("lvev99251", "정윤성1", "윤성1");
 		user2 = new User("lvev99252", "정윤성2", "윤성2");
 		user3 = new User("lvev99253", "정윤성3", "윤성3");
