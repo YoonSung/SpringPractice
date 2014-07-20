@@ -17,8 +17,11 @@ public class UserDaoTest {
 		//UserDao dao = context.getBean("userDao", UserDao.class);
 		
 		//ApplicationContext context = new GenericXmlApplicationContext("./resources/applicationContext.xml");
-		ApplicationContext context = new ClassPathXmlApplicationContext("classpath:/applicationContext.xml");
-		UserDao dao = context.getBean("userDao", UserDao.class);
+		//ApplicationContext context = new ClassPathXmlApplicationContext("classpath:/applicationContext.xml");
+		//UserDao dao = context.getBean("userDao", UserDao.class);
+		
+		DaoFactory daoFactory = new DaoFactory();
+		UserDao dao = daoFactory.userDao();
 		
 		User user = new User();
 		user.setId("lvev9925a");

@@ -3,14 +3,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
+import javax.sql.DataSource;
 import springbook.user.domain.User;
 
 public class UserDao {
 	
-	private ConnectionMaker connectionMaker;
+	private DataSource dataSource;
 
 //	의존성 주입
 //	public UserDao(ConnectionMaker connectionMaker) {
@@ -31,12 +29,12 @@ public class UserDao {
 //	}
 	
 //DaoFactory방식 2. (수정자)	
-	public void setConnectionMaker(ConnectionMaker connectionMaker) {
-		this.connectionMaker = connectionMaker;
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
-	public void add(User user) throws SQLException, ClassNotFoundException {
-		Connection connection = connectionMaker.makeConnection();
+	public void add(User user) throws SQLException {
+		Connection connection = dataSource.getConnection();
 		
 		PreparedStatement preparedStatement = connection.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
 		preparedStatement.setString(1,  user.getId());
@@ -49,8 +47,8 @@ public class UserDao {
 		connection.close();
 	}
 	
-	public User get(String id) throws ClassNotFoundException, SQLException {
-		Connection connection = connectionMaker.makeConnection();
+	public User get(String id) throws SQLException {
+		Connection connection = dataSource.getConnection();
 		
 		PreparedStatement preparedStatement = connection.prepareStatement("select * from users where id = ?");
 		
