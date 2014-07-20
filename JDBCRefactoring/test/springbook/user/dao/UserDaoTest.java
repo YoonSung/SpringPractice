@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
 
@@ -12,10 +13,16 @@ import springbook.user.domain.User;
 
 public class UserDaoTest {
 	
+	private UserDao dao;
+	
+	@Before
+	public void setUp() {
+		DaoFactory daoFactory = new DaoFactory();
+		dao = daoFactory.userDao();
+	}
+	
 	@Test
 	public void addAndGet() throws SQLException {
-		DaoFactory daoFactory = new DaoFactory();
-		UserDao dao = daoFactory.userDao();
 		
 		dao.deleteAll();
 		assertThat(dao.getCount(), is(0));
@@ -36,8 +43,6 @@ public class UserDaoTest {
 	
 	@Test
 	public void count() throws SQLException {
-		DaoFactory daoFactory = new DaoFactory();
-		UserDao dao = daoFactory.userDao();
 		
 		User user1 = new User("lvev99251", "정윤성1", "윤성1");
 		User user2 = new User("lvev99252", "정윤성2", "윤성2");
@@ -58,8 +63,6 @@ public class UserDaoTest {
 	
 	@Test(expected=EmptyResultDataAccessException.class)
 	public void getUserFailure() throws SQLException {
-		DaoFactory daoFactory = new DaoFactory();
-		UserDao dao = daoFactory.userDao();
 		
 		dao.deleteAll();
 		assertThat(dao.getCount(), is(0));
