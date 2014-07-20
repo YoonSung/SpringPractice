@@ -1,28 +1,20 @@
 package springbook.user.dao;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.sql.SQLException;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 import springbook.user.domain.User;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:/applicationContext.xml")
 public class UserDaoTest {
-	
-	@Autowired//변수타입과 일치하는 컨텍스트 내의 빈을 찾는다. ApplicationContext는 자동으로 bean에 추가된다.
-	private ApplicationContext context;
 	
 	private UserDao dao;
 	private User user1;
@@ -31,10 +23,14 @@ public class UserDaoTest {
 	
 	@Before
 	public void setUp() {
-		dao = this.context.getBean("userDao", UserDao.class);
-		user1 = new User("lvev99251", "정윤성1", "윤성1");
-		user2 = new User("lvev99252", "정윤성2", "윤성2");
-		user3 = new User("lvev99253", "정윤성3", "윤성3");
+		dao = new UserDao();
+		DataSource dataSource = new SingleConnectionDataSource(
+				"jdbc:mysql://54.178.137.153:3306/springPractice",
+				"yoon",
+				"spring",
+				true
+		);
+		dao.setDataSource(dataSource);
 	}
 	
 	@Test
