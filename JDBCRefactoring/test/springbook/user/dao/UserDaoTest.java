@@ -4,7 +4,10 @@ import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+
 import org.junit.Test;
+import org.springframework.dao.EmptyResultDataAccessException;
+
 import springbook.user.domain.User;
 
 public class UserDaoTest {
@@ -51,5 +54,16 @@ public class UserDaoTest {
 		
 		dao.add(user3);
 		assertThat(dao.getCount(), is(3));
+	}
+	
+	@Test(expected=EmptyResultDataAccessException.class)
+	public void getUserFailure() throws SQLException {
+		DaoFactory daoFactory = new DaoFactory();
+		UserDao dao = daoFactory.userDao();
+		
+		dao.deleteAll();
+		assertThat(dao.getCount(), is(0));
+		
+		dao.get("unknown_id");
 	}
 }
