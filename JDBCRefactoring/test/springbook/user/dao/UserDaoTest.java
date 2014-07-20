@@ -14,16 +14,21 @@ import springbook.user.domain.User;
 public class UserDaoTest {
 	
 	private UserDao dao;
+	private User user1;
+	private User user2;
+	private User user3;
 	
 	@Before
 	public void setUp() {
 		DaoFactory daoFactory = new DaoFactory();
 		dao = daoFactory.userDao();
+		user1 = new User("lvev99251", "정윤성1", "윤성1");
+		user2 = new User("lvev99252", "정윤성2", "윤성2");
+		user3 = new User("lvev99253", "정윤성3", "윤성3");
 	}
 	
 	@Test
 	public void addAndGet() throws SQLException {
-		
 		dao.deleteAll();
 		assertThat(dao.getCount(), is(0));
 		
@@ -43,11 +48,6 @@ public class UserDaoTest {
 	
 	@Test
 	public void count() throws SQLException {
-		
-		User user1 = new User("lvev99251", "정윤성1", "윤성1");
-		User user2 = new User("lvev99252", "정윤성2", "윤성2");
-		User user3 = new User("lvev99253", "정윤성3", "윤성3");
-		
 		dao.deleteAll();
 		assertThat(dao.getCount(), is(0));
 		
