@@ -2,26 +2,26 @@ package springbook.user.dao;
 
 import java.sql.SQLException;
 
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+import org.junit.Test;
 import springbook.user.domain.User;
 
-
 public class UserDaoTest {
-	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+	
+	@Test
+	public void addAndGet() throws SQLException {
 		DaoFactory daoFactory = new DaoFactory();
 		UserDao dao = daoFactory.userDao();
 		
-		User user = new User();
-		user.setId("lvev9925a");
-		user.setName("Jung");
-		user.setPassword("Yoonsung");
+		User insertUser = new User();
+		insertUser.setId("lvev9925b");
+		insertUser.setName("Jung");
+		insertUser.setPassword("Yoonsung");
 		
-		dao.add(user);
-		
-		System.out.println(user.getId() +"등록 성공");
-		
-		User user2 = dao.get(user.getId());
-		System.out.println(user2.getName());
-		System.out.println(user2.getPassword());
-		System.out.println(user2.getId() + "조회 성공");
+		dao.add(insertUser);
+		User selectUser = dao.get(insertUser.getId());
+		assertThat(insertUser.getName(), is(selectUser.getName()));
+		assertThat(insertUser.getPassword(), is(selectUser.getPassword()));
 	}
 }
