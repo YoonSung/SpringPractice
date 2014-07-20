@@ -31,6 +31,10 @@ public class UserDaoTest {
 				true
 		);
 		dao.setDataSource(dataSource);
+		
+		user1 = new User("lvev99251", "정윤성1", "윤성1");
+		user2 = new User("lvev99252", "정윤성2", "윤성2");
+		user3 = new User("lvev99253", "정윤성3", "윤성3");
 	}
 	
 	@Test
