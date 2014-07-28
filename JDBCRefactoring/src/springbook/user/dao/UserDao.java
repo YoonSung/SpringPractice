@@ -13,7 +13,8 @@ import springbook.user.domain.User;
 public class UserDao {
 	
 	private DataSource dataSource;
-
+	private JdbcContext jdbcContext;
+	
 //	의존성 주입
 //	public UserDao(ConnectionMaker connectionMaker) {
 //		this.connectionMaker = connectionMaker;
@@ -36,11 +37,15 @@ public class UserDao {
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
+
+	public void setJdbcContext(JdbcContext jdbcContext) {
+		this.jdbcContext = jdbcContext;
+	}
 	
 	//왜 final이 아니여도 되는거지?? 1.8의 특징인가?!
 	//public void add(User user) throws SQLException {
 	public void add(final User user) throws SQLException {
-		jdbcContextWithStatementStrategy(new StatementStrategy() {
+		jdbcContext.workWithStatement(new StatementStrategy() {
 			@Override
 			public PreparedStatement makePreparedStatement(Connection connection)
 					throws SQLException {
@@ -81,7 +86,8 @@ public class UserDao {
 	}
 	
 	public void deleteAll() throws SQLException{
-		jdbcContextWithStatementStrategy(new StatementStrategy() {
+		System.out.println(jdbcContext);
+		jdbcContext.workWithStatement(new StatementStrategy() {
 			
 			@Override
 			public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
@@ -91,33 +97,6 @@ public class UserDao {
 		});
 	}
 
-	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		try {
-			connection = dataSource.getConnection();
-			preparedStatement = stmt.makePreparedStatement(connection);
-			
-			preparedStatement.executeUpdate();
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			if (preparedStatement != null) {
-				try {
-					preparedStatement.close();
-				} catch (SQLException e) {
-				}
-			}
-			
-			if (connection !=null) {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-	}
-	
 	public int getCount() throws SQLException {
 		Connection connection = dataSource.getConnection();
 		PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM users");

@@ -31,6 +31,9 @@ public class UserDaoTest {
 				true
 		);
 		dao.setDataSource(dataSource);
+		JdbcContext jdbcContext = new JdbcContext();
+		jdbcContext.setDataSource(dataSource);
+		dao.setJdbcContext(jdbcContext);
 		
 		user1 = new User("lvev99251", "정윤성1", "윤성1");
 		user2 = new User("lvev99252", "정윤성2", "윤성2");
