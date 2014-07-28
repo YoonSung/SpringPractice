@@ -77,7 +77,7 @@ public class UserDao {
 		return user;
 	}
 	
-	public void deleteAll() {
+	public void deleteAll() throws SQLException{
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
@@ -85,8 +85,7 @@ public class UserDao {
 			preparedStatement = connection.prepareStatement("DELETE FROM users");
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e;
 		} finally {
 			if (preparedStatement != null) {
 				try {
