@@ -40,8 +40,7 @@ public class UserDao {
 	//왜 final이 아니여도 되는거지?? 1.8의 특징인가?!
 	//public void add(User user) throws SQLException {
 	public void add(final User user) throws SQLException {
-		
-		StatementStrategy st = new StatementStrategy() {
+		jdbcContextWithStatementStrategy(new StatementStrategy() {
 			@Override
 			public PreparedStatement makePreparedStatement(Connection connection)
 					throws SQLException {
@@ -52,8 +51,7 @@ public class UserDao {
 				preparedStatement.setString(3, user.getPassword());
 				return preparedStatement;
 			}
-		};
-		jdbcContextWithStatementStrategy(st);
+		});
 	}
 	
 	public User get(String id) throws SQLException {
