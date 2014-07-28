@@ -77,13 +77,32 @@ public class UserDao {
 		return user;
 	}
 	
-	public void deleteAll() throws SQLException {
-		Connection connection = dataSource.getConnection();
-		PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users");
-		preparedStatement.executeUpdate();
+	public void deleteAll() {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = dataSource.getConnection();
+			preparedStatement = connection.prepareStatement("DELETE FROM users");
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+				}
+			}
+			
+			if (connection !=null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
 		
-		preparedStatement.close();
-		connection.close();
 	}
 	
 	public int getCount() throws SQLException {
