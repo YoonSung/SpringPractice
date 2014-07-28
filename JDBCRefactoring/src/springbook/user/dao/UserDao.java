@@ -37,8 +37,24 @@ public class UserDao {
 		this.dataSource = dataSource;
 	}
 	
-	public void add(User user) throws SQLException {
-		StatementStrategy st = new AddStatement(user);
+	//왜 final이 아니여도 되는거지?? 1.8의 특징인가?!
+	//public void add(User user) throws SQLException {
+	public void add(final User user) throws SQLException {
+		
+		class AddStatement implements StatementStrategy {
+
+			@Override
+			public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
+				PreparedStatement preparedStatement = connection.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
+				preparedStatement.setString(1,  user.getId());
+				preparedStatement.setString(2, user.getName());
+				preparedStatement.setString(3, user.getPassword());
+				return preparedStatement;
+			}
+		}
+
+		
+		StatementStrategy st = new AddStatement();
 		jdbcContextWithStatementStrategy(st);
 	}
 	
