@@ -41,20 +41,18 @@ public class UserDao {
 	//public void add(User user) throws SQLException {
 	public void add(final User user) throws SQLException {
 		
-		class AddStatement implements StatementStrategy {
-
+		StatementStrategy st = new StatementStrategy() {
 			@Override
-			public PreparedStatement makePreparedStatement(Connection connection) throws SQLException {
+			public PreparedStatement makePreparedStatement(Connection connection)
+					throws SQLException {
+				
 				PreparedStatement preparedStatement = connection.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
 				preparedStatement.setString(1,  user.getId());
 				preparedStatement.setString(2, user.getName());
 				preparedStatement.setString(3, user.getPassword());
 				return preparedStatement;
 			}
-		}
-
-		
-		StatementStrategy st = new AddStatement();
+		};
 		jdbcContextWithStatementStrategy(st);
 	}
 	
