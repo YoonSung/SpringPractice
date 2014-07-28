@@ -82,7 +82,10 @@ public class UserDao {
 		PreparedStatement preparedStatement = null;
 		try {
 			connection = dataSource.getConnection();
-			preparedStatement = makeStatement(connection);
+			
+			//TODO OCP의 개방원칙에 위배. 변경되어야 한다.
+			StatementStrategy strategy = new DeleteAllStatement();
+			preparedStatement = strategy.makePreparedStatement(connection);
 			
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
@@ -105,14 +108,6 @@ public class UserDao {
 		
 	}
 
-	private PreparedStatement makeStatement(Connection connection)
-			throws SQLException {
-		PreparedStatement preparedStatement;
-		preparedStatement = connection.prepareStatement("DELETE FROM users");
-		
-		return preparedStatement;
-	}
-	
 	public int getCount() throws SQLException {
 		Connection connection = dataSource.getConnection();
 		PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM users");
