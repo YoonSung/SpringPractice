@@ -78,4 +78,15 @@ public class Calculator {
 			}
 		}, 1);
 	}
+
+	public String concatenate(String filePath) throws Exception {
+		return lineReadTemplate(filePath, new LineCallback<String>() {
+
+			@Override
+			public String doSomethingWithLine(String line, String result) {
+				return result + line;
+			}
+			
+		}, "");
+	}
 }
