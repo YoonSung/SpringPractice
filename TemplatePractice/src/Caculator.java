@@ -1,23 +1,33 @@
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class Caculator {
 
 	public Integer calcSum(String filePath) throws IOException {
+		return fileReadTemplate(filePath, new BufferedReaderCallback() {
+			
+			@Override
+			public Integer doSomethingWithReader(BufferedReader br) throws IOException {
+				int sum = 0;
+				String line = null;
+				while((line = br.readLine()) != null) {
+					sum += Integer.valueOf(line);
+				}		
+				return sum;
+			}
+		});
+	}
+	
+	public Integer fileReadTemplate(String filePath, BufferedReaderCallback callback) throws IOException {
 		
 		BufferedReader br = null;
+		int sum = 0;
 		try {
 			br = new BufferedReader(new FileReader(filePath));
-			Integer sum = 0;
-			String line = null;
-			
-			while((line = br.readLine()) != null) {
-				sum += Integer.valueOf(line);
-			}
-			
-			return sum;
-		} catch (IOException e) {
+			sum = callback.doSomethingWithReader(br);
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			throw e;
 		} finally {
@@ -30,5 +40,7 @@ public class Caculator {
 				}
 			}
 		}
+		
+		return sum;
 	}
 }
