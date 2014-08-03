@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class Caculator {
+public class Calculator {
 
 	public Integer calcSum(String filePath) throws IOException {
 		return fileReadTemplate(filePath, new BufferedReaderCallback() {
