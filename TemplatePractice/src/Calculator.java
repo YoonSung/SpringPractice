@@ -43,4 +43,19 @@ public class Calculator {
 		
 		return sum;
 	}
+
+	public int calcMultiply(String filePath) throws IOException {
+		return fileReadTemplate(filePath, new BufferedReaderCallback() {
+			@Override
+			public Integer doSomethingWithReader(BufferedReader br) throws IOException {
+				int multiplyResult  = 1;
+				String line = null;
+				while((line = br.readLine()) != null) {
+					multiplyResult *= Integer.valueOf(line);
+				}
+				
+				return multiplyResult;
+			}
+		});
+	}
 }

@@ -1,8 +1,10 @@
-import static org.junit.Assert.assertSame;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
+
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
-
 
 public class CalculatorTest {
 
@@ -12,19 +14,16 @@ public class CalculatorTest {
 	@Before
 	public void setUp() {
 		calculator = new Calculator();
+		this.numFilePath = "numbers.txt";//getClass().getResource("numbers.txt").getPath();
 	}
 	
 	@Test
-	public void sumOfNumbers() {
-		Calculator caculator = new Calculator();
-		int sum = 0;
-		try {
-			sum = caculator.calcSum("numbers.txt");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		assertSame(10, sum);
+	public void sumOfNumbers() throws IOException {
+		assertSame(10, calculator.calcSum(this.numFilePath));
 	}
-
+	
+	@Test
+	public void muliplyOfNumbers() throws IOException {
+		assertThat(calculator.calcMultiply(this.numFilePath), is(24));
+	}
 }
