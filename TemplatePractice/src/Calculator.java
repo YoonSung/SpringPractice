@@ -5,21 +5,17 @@ import java.io.IOException;
 
 public class Calculator {
 
-	public Integer calcSum(String filePath) throws IOException {
-		return fileReadTemplate(filePath, new BufferedReaderCallback() {
+	public Integer calcSum(String filePath) throws Exception {
+		return lineReadTemplate(filePath, new LineCallback() {
 			
 			@Override
-			public Integer doSomethingWithReader(BufferedReader br) throws IOException {
-				int sum = 0;
-				String line = null;
-				while((line = br.readLine()) != null) {
-					sum += Integer.valueOf(line);
-				}		
-				return sum;
+			public Integer doSomethingWithLine(String line, Integer result) {
+				return result + Integer.valueOf(line);
 			}
-		});
+		}, 0);
 	}
 	
+	//템플릿 1
 	public Integer fileReadTemplate(String filePath, BufferedReaderCallback callback) throws IOException {
 		
 		BufferedReader br = null;
@@ -44,18 +40,42 @@ public class Calculator {
 		return sum;
 	}
 
-	public int calcMultiply(String filePath) throws IOException {
-		return fileReadTemplate(filePath, new BufferedReaderCallback() {
-			@Override
-			public Integer doSomethingWithReader(BufferedReader br) throws IOException {
-				int multiplyResult  = 1;
-				String line = null;
-				while((line = br.readLine()) != null) {
-					multiplyResult *= Integer.valueOf(line);
-				}
-				
-				return multiplyResult;
+	//템플릿 2
+	public Integer lineReadTemplate(String filePath, LineCallback callback, int initVal) throws Exception {
+		BufferedReader br = null;
+		Integer result = initVal;
+		try {
+			br = new BufferedReader(new FileReader(filePath));
+			String line = null;
+			
+			while((line = br.readLine()) != null) {
+				result = callback.doSomethingWithLine(line, result);
 			}
-		});
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			throw e;
+			
+		} finally {
+			
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	public int calcMultiply(String filePath) throws Exception {
+		return lineReadTemplate(filePath, new LineCallback() {
+			
+			@Override
+			public Integer doSomethingWithLine(String line, Integer result) {
+				return result * Integer.valueOf(line);
+			}
+		}, 0);
 	}
 }
