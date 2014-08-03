@@ -1,4 +1,4 @@
 
-public interface LineCallback {
-	public Integer doSomethingWithLine(String line, Integer result);
+public interface LineCallback<T> {
+	public T doSomethingWithLine(String line, T result);
 }

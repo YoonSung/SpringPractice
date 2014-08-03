@@ -6,7 +6,7 @@ import java.io.IOException;
 public class Calculator {
 
 	public Integer calcSum(String filePath) throws Exception {
-		return lineReadTemplate(filePath, new LineCallback() {
+		return lineReadTemplate(filePath, new LineCallback<Integer>() {
 			
 			@Override
 			public Integer doSomethingWithLine(String line, Integer result) {
@@ -41,9 +41,9 @@ public class Calculator {
 	}
 
 	//템플릿 2
-	public Integer lineReadTemplate(String filePath, LineCallback callback, int initVal) throws Exception {
+	public <T> T lineReadTemplate(String filePath, LineCallback<T> callback, T initVal) throws Exception {
 		BufferedReader br = null;
-		Integer result = initVal;
+		T result = initVal;
 		try {
 			br = new BufferedReader(new FileReader(filePath));
 			String line = null;
@@ -70,12 +70,12 @@ public class Calculator {
 	}
 	
 	public int calcMultiply(String filePath) throws Exception {
-		return lineReadTemplate(filePath, new LineCallback() {
+		return lineReadTemplate(filePath, new LineCallback<Integer>() {
 			
 			@Override
 			public Integer doSomethingWithLine(String line, Integer result) {
 				return result * Integer.valueOf(line);
 			}
-		}, 0);
+		}, 1);
 	}
 }
