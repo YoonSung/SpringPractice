@@ -11,6 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 
 import springbook.user.domain.User;
 
@@ -51,29 +52,20 @@ public class UserDao {
 	}
 	
 	public User get(String id) throws SQLException {
-		Connection connection = dataSource.getConnection();
-		
-		PreparedStatement preparedStatement = connection.prepareStatement("select * from users where id = ?");
-		
-		preparedStatement.setString(1,  id);
-		
-		ResultSet resultSet = preparedStatement.executeQuery();
-		
-		User user = null;
-		if (resultSet.next()){
-			user = new User();
-			user.setId(resultSet.getString("id"));
-			user.setName(resultSet.getString("name"));
-			user.setPassword(resultSet.getString("password"));
+		return this.jdbcTemplate.queryForObject("SELECT * FROM users WHERE id = ?", 
+																			new Object[]{id}, 
+																			new RowMapper<User>() {
+
+			@Override
+			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+				User user = new User();
+				user.setId(rs.getString("id"));
+				user.setName(rs.getString("name"));
+				user.setPassword(rs.getString("password"));
+				return user;
+			}
 			
-		}
-		
-		resultSet.close();
-		preparedStatement.close();
-		connection.close();
-		
-		if (user == null) throw new EmptyResultDataAccessException(1);
-		return user;
+		});
 	}
 	
 	public void deleteAll() throws SQLException{
