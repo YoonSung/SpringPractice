@@ -7,13 +7,15 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 
 import springbook.user.domain.User;
 
 public class UserDao {
 	
 	private DataSource dataSource;
-	private JdbcContext jdbcContext;
+	private JdbcTemplate jdbcTemplate;
 	
 //	의존성 주입
 //	public UserDao(ConnectionMaker connectionMaker) {
@@ -35,28 +37,15 @@ public class UserDao {
 	
 //DaoFactory방식 2. (수정자)	
 	public void setDataSource(DataSource dataSource) {
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
+		
 		this.dataSource = dataSource;
 	}
 
-	public void setJdbcContext(JdbcContext jdbcContext) {
-		this.jdbcContext = jdbcContext;
-	}
-	
 	//왜 final이 아니여도 되는거지?? 1.8의 특징인가?!
 	//public void add(User user) throws SQLException {
 	public void add(final User user) throws SQLException {
-		jdbcContext.workWithStatement(new StatementStrategy() {
-			@Override
-			public PreparedStatement makePreparedStatement(Connection connection)
-					throws SQLException {
-				
-				PreparedStatement preparedStatement = connection.prepareStatement("insert into users(id, name, password) values(?, ?, ?)");
-				preparedStatement.setString(1,  user.getId());
-				preparedStatement.setString(2, user.getName());
-				preparedStatement.setString(3, user.getPassword());
-				return preparedStatement;
-			}
-		});
+		this.jdbcTemplate.update("INSERT INTO users(id, name, password) VALUES (?, ?, ?)", user.getId(), user.getName(), user.getPassword());
 	}
 	
 	public User get(String id) throws SQLException {
@@ -86,7 +75,14 @@ public class UserDao {
 	}
 	
 	public void deleteAll() throws SQLException{
-		jdbcContext.executeSql("DELETE FROM users");
+		this.jdbcTemplate.update(new PreparedStatementCreator() {
+			
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection)
+					throws SQLException {
+				return connection.prepareStatement("DELETE FROM users");
+			}
+		});
 	}
 
 	public int getCount() throws SQLException {
