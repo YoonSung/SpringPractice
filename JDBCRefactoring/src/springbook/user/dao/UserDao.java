@@ -7,47 +7,20 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 
 import springbook.user.domain.User;
 
 public class UserDao {
 	
-	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
 	
-//	의존성 주입
-//	public UserDao(ConnectionMaker connectionMaker) {
-//		this.connectionMaker = connectionMaker;
-//	}
-	
-//	DaoFactory방식 1. (생성자)
-//	public UserDao() {
-//		DaoFactory daoFactory = new DaoFactory();
-//		this.connectionMaker = daoFactory.connectionMaker();
-//	}
-	
-//	의존관계 검색을 이용하는 방식
-//	public UserDao() {
-//		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-//		this.connectionMaker = context.getBean("connectionMaker", ConnectionMaker.class);
-//		context.close();
-//	}
-	
-//DaoFactory방식 2. (수정자)	
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
-		
-		this.dataSource = dataSource;
 	}
 
-	//왜 final이 아니여도 되는거지?? 1.8의 특징인가?!
-	//public void add(User user) throws SQLException {
 	public void add(final User user) throws SQLException {
 		this.jdbcTemplate.update("INSERT INTO users(id, name, password) VALUES (?, ?, ?)", user.getId(), user.getName(), user.getPassword());
 	}
