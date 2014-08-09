@@ -17,14 +17,14 @@ import springbook.user.domain.User;
 
 public class UserDaoTest {
 	
-	private UserDao dao;
+	private UserDaoJdbc dao;
 	private User user1;
 	private User user2;
 	private User user3;
 	
 	@Before
 	public void setUp() {
-		dao = new UserDao();
+		dao = new UserDaoJdbc();
 		DataSource dataSource = new SingleConnectionDataSource(
 				"jdbc:mysql://54.178.137.153:3306/springPractice?useUnicode=true",
 				"yoon",
