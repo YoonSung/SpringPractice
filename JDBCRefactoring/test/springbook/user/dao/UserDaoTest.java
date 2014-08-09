@@ -19,6 +19,7 @@ import springbook.user.domain.User;
 public class UserDaoTest {
 	
 	private UserDaoJdbc dao;
+	private DataSource dataSource;
 	private User user1;
 	private User user2;
 	private User user3;
@@ -26,7 +27,7 @@ public class UserDaoTest {
 	@Before
 	public void setUp() {
 		dao = new UserDaoJdbc();
-		DataSource dataSource = new SingleConnectionDataSource(
+		dataSource = new SingleConnectionDataSource(
 				"jdbc:mysql://54.178.137.153:3306/springPractice?useUnicode=true",
 				"yoon",
 				"spring",
@@ -122,4 +123,22 @@ public class UserDaoTest {
 		dao.add(user1);
 		dao.add(user1);
 	}
+	
+	/*
+	@Test
+	public void sqlExceptionTranslate() {
+		dao.deleteAll();
+
+		try {
+			dao.add(user1);
+			dao.add(user2);
+		} catch (DuplicateKeyException ex) {
+			SQLException sqlEx = (SQLException)ex.getRootCause();
+			SQLExceptionTranslator set = new SQLErrorCodeSQLExceptionTranslator(this.dataSource);
+			
+			assertThat(set.translate(null, null, sqlEx), 
+					is(DuplicateKeyException.class));
+		}
+	}
+	*/
 }
