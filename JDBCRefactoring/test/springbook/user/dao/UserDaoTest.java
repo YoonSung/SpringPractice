@@ -1,7 +1,7 @@
 package springbook.user.dao;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -41,6 +41,23 @@ public class UserDaoTest {
 		user1 = new User("lvev99251", "JungYoonSung1", "yoonsung1", Level.BASIC, 1, 0);
 		user2 = new User("lvev99252", "JungYoonSung2", "yoonsung2", Level.SILVER, 55, 10);
 		user3 = new User("lvev99253", "JungYoonSung3", "yoonsung3", Level.GOLD, 100, 40);
+	}
+	
+	@Test
+	public void update() throws Exception {
+		dao.deleteAll();
+		
+		dao.add(user1);
+		
+		user1.setName("updateName");
+		user1.setPassword("updatePassword");
+		user1.setLevel(Level.GOLD);
+		user1.setLogin(1000);
+		user1.setRecommend(999);
+		dao.update(user1);
+		
+		User updatedUser = dao.get(user1.getId());
+		checkSameUser(user1, updatedUser);
 	}
 	
 	@Test
