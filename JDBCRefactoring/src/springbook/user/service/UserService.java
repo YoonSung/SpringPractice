@@ -24,15 +24,14 @@ public class UserService {
 		List<User> users = userDao.getAll();
 		for (User user : users) {
 			if (canUpgradeLevel(user)) {
-				upgradeLevel(user);
+				try {
+					user.upgradeLevel();
+					userDao.update(user);
+				} catch (IllegalArgumentException e) {
+					continue;
+				}
 			}
 		}
-	}
-
-	private void upgradeLevel(User user) {
-		if (user.getLevel() == Level.BASIC) user.setLevel(Level.SILVER);
-		else if (user.getLevel() == Level.SILVER) user.setLevel(Level.GOLD);
-		userDao.update(user);
 	}
 
 	private boolean canUpgradeLevel(User user) {
