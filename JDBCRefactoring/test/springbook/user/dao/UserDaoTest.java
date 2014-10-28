@@ -14,6 +14,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
+import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 public class UserDaoTest {
@@ -28,7 +29,7 @@ public class UserDaoTest {
 	public void setUp() {
 		dao = new UserDaoJdbc();
 		dataSource = new SingleConnectionDataSource(
-				"jdbc:mysql://54.178.137.153:3306/springPractice?useUnicode=true",
+				"jdbc:mysql://54.64.59.174:3306/springPractice?useUnicode=true",
 				"yoon",
 				"spring",
 				true
@@ -37,9 +38,9 @@ public class UserDaoTest {
 		JdbcContext jdbcContext = new JdbcContext();
 		jdbcContext.setDataSource(dataSource);
 		
-		user1 = new User("lvev99251", "JungYoonSung1", "yoonsung1");
-		user2 = new User("lvev99252", "JungYoonSung2", "yoonsung2");
-		user3 = new User("lvev99253", "JungYoonSung3", "yoonsung3");
+		user1 = new User("lvev99251", "JungYoonSung1", "yoonsung1", Level.BASIC, 1, 0);
+		user2 = new User("lvev99252", "JungYoonSung2", "yoonsung2", Level.SILVER, 55, 10);
+		user3 = new User("lvev99253", "JungYoonSung3", "yoonsung3", Level.GOLD, 100, 40);
 	}
 	
 	@Test
@@ -47,18 +48,13 @@ public class UserDaoTest {
 		dao.deleteAll();
 		assertThat(dao.getCount(), is(0));
 		
-		User insertUser = new User();
-		insertUser.setId("lvev9925b");
-		insertUser.setName("Jung");
-		insertUser.setPassword("Yoonsung");
-		
-		dao.add(insertUser);
+		dao.add(user1);
 		
 		assertThat(dao.getCount(), is(1));
 		
-		User selectUser = dao.get(insertUser.getId());
-		assertThat(insertUser.getName(), is(selectUser.getName()));
-		assertThat(insertUser.getPassword(), is(selectUser.getPassword()));
+		User selectUser = dao.get(user1.getId());
+		assertThat(user1.getName(), is(selectUser.getName()));
+		assertThat(user1.getPassword(), is(selectUser.getPassword()));
 	}
 	
 	@Test
@@ -115,6 +111,9 @@ public class UserDaoTest {
 		assertThat(user1.getId(), is(user2.getId()));
 		assertThat(user1.getName(), is(user2.getName()));
 		assertThat(user1.getPassword(), is(user2.getPassword()));
+		assertThat(user1.getLevel(), is(user2.getLevel()));
+		assertThat(user1.getLogin(), is(user2.getLogin()));
+		assertThat(user1.getRecommend(), is(user2.getRecommend()));
 	}
 	
 	@Test(expected=DataAccessException.class)

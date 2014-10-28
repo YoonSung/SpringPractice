@@ -11,7 +11,6 @@ public class JdbcContext {
 	DataSource dataSource;
 	
 	public void setDataSource(DataSource dataSource) {
-		System.out.println("test");
 		this.dataSource = dataSource;
 	}
 	
