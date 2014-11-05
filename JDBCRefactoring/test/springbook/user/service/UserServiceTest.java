@@ -50,14 +50,43 @@ public class UserServiceTest {
 		
 		userService.upgradeLevels();
 		
-		checkLevel(users.get(0), false);
-		checkLevel(users.get(1), true);
-		checkLevel(users.get(2), false);
-		checkLevel(users.get(3), true);
-		checkLevel(users.get(4), false);
+		checkLevelUpgraded(users.get(0), false);
+		checkLevelUpgraded(users.get(1), true);
+		checkLevelUpgraded(users.get(2), false);
+		checkLevelUpgraded(users.get(3), true);
+		checkLevelUpgraded(users.get(4), false);
 	}
 
-	private void checkLevel(User user, boolean upgraded) {
+	@Test(expected=TestUserServiceException.class)
+	public void upgradeAllOrNothing() throws Exception {
+		
+		//4번째 유저에서 에러가 발생하도록
+		UserService testUserService = new TestUserService(users.get(3).getId());
+		
+		//Container에서 관리하지 않으므로 수동 DI
+		testUserService.setUserDao(this.userDao);
+		
+		userDao.deleteAll();
+		
+		//데이터 생성
+		for (User user : users) {
+			userDao.add(user);
+		}
+		
+		try {
+			
+			//TestUserService 업그레이드 작업 중에 예외가 발생해야 한다. 정상 종료라면 문제가 있으니 실패.
+			testUserService.upgradeLevels();
+			fail("TestUserServiceException expected");
+		} catch (TestUserServiceException e) {
+			//TestUserService가 던져주는 예외를 잡아서 계속 진행되도록 한다
+		}
+		
+		//예외가 발생하기 전에 레벨 변경이 있었던 사용자의 레벨이 처음 상태로 바뀌었나 확인
+		checkLevelUpgraded(users.get(1), false);
+	}
+	
+	private void checkLevelUpgraded(User user, boolean upgraded) {
 		User userUpdate = userDao.get(user.getId());
 		
 		if (upgraded)
@@ -65,4 +94,23 @@ public class UserServiceTest {
 		else
 			assertThat(userUpdate.getLevel(), is(user.getLevel()));
 	}
+	
+	static class TestUserService extends UserService {
+		private String id;
+		
+		//예외를 발생시킬 User 오브젝트의 id를 지정할 수 있게 만든다.
+		private TestUserService(String id) {
+			this.id = id;
+		}
+		
+		@Override
+		protected void upgradeLevel(User user) {
+			if (user.getId().equals(this.id)) throw new TestUserServiceException();
+			super.upgradeLevel(user);
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	static class TestUserServiceException extends RuntimeException {}
+	
 }
