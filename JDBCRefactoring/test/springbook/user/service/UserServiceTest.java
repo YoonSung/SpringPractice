@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +28,9 @@ public class UserServiceTest {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	DataSource dataSource;
 	
 	List<User> users;
 	
@@ -57,7 +62,7 @@ public class UserServiceTest {
 		checkLevelUpgraded(users.get(4), false);
 	}
 
-	@Test(expected=TestUserServiceException.class)
+	@Test
 	public void upgradeAllOrNothing() throws Exception {
 		
 		//4번째 유저에서 에러가 발생하도록
@@ -65,6 +70,7 @@ public class UserServiceTest {
 		
 		//Container에서 관리하지 않으므로 수동 DI
 		testUserService.setUserDao(this.userDao);
+		testUserService.setDataSource(this.dataSource);
 		
 		userDao.deleteAll();
 		
