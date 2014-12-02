@@ -1,16 +1,17 @@
 package springbook.user.service;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -18,7 +19,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
-import static org.hamcrest.CoreMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:/applicationContext.xml")
@@ -34,6 +34,9 @@ public class UserServiceTest {
 	
 	@Autowired
 	PlatformTransactionManager transactionManager;
+	
+	@Autowired
+	MailSender mailSender;
 	
 	@Before
 	public void setUp() {
@@ -72,6 +75,7 @@ public class UserServiceTest {
 		//Container에서 관리하지 않으므로 수동 DI
 		testUserService.setUserDao(this.userDao);
 		testUserService.setTransactionManager(this.transactionManager);
+		testUserService.setMailSender(this.mailSender);
 		
 		userDao.deleteAll();
 		
