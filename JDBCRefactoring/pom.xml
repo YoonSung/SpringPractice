@@ -57,7 +57,7 @@
 		<testSourceDirectory>test</testSourceDirectory>
 		<resources>
 			<resource>
-				<directory>/Users/yoon/project/Spring/workspace/SpringPractice/JDBCRefactoring/resources</directory>
+				<directory>/Volumes/storage/project/Spring/workspace/SpringPractice/JDBCRefactoring/resources</directory>
 			</resource>
 		</resources>
 		<plugins>

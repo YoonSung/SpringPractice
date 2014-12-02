@@ -6,6 +6,12 @@ import org.springframework.mail.SimpleMailMessage;
 
 public class DummyMailSender implements MailSender {
 
+	String host;
+	
+	public void setHost(String host) {
+		this.host = host;
+	}
+	
 	@Override
 	public void send(SimpleMailMessage arg0) throws MailException {
 	}
