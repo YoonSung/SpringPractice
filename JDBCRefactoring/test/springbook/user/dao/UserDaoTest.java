@@ -38,9 +38,9 @@ public class UserDaoTest {
 		JdbcContext jdbcContext = new JdbcContext();
 		jdbcContext.setDataSource(dataSource);
 		
-		user1 = new User("lvev99251", "JungYoonSung1", "yoonsung1", Level.BASIC, 1, 0);
-		user2 = new User("lvev99252", "JungYoonSung2", "yoonsung2", Level.SILVER, 55, 10);
-		user3 = new User("lvev99253", "JungYoonSung3", "yoonsung3", Level.GOLD, 100, 40);
+		user1 = new User("lvev99251", "JungYoonSung1", "yoonsung1", Level.BASIC, 1, 0, "testEmail");
+		user2 = new User("lvev99252", "JungYoonSung2", "yoonsung2", Level.SILVER, 55, 10, "testEmail");
+		user3 = new User("lvev99253", "JungYoonSung3", "yoonsung3", Level.GOLD, 100, 40, "testEmail");
 	}
 	
 	@Test
@@ -54,6 +54,7 @@ public class UserDaoTest {
 		user1.setLevel(Level.GOLD);
 		user1.setLogin(1000);
 		user1.setRecommend(999);
+		user1.setEmail("testEmail");
 		dao.update(user1);
 		
 		User updatedUser = dao.get(user1.getId());

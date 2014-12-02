@@ -39,11 +39,11 @@ public class UserServiceTest {
 	public void setUp() {
 		users = new ArrayList<User>();
 		
-		users.add(new User("userId_1", "userName_1", "userPasswordk_1", Level.BASIC, UserService.MIN_LOGCOUNT_FOR_SILVER-1, 0));
-		users.add(new User("userId_2", "userName_2", "userPasswordk_2", Level.BASIC, UserService.MIN_LOGCOUNT_FOR_SILVER, 0));
-		users.add(new User("userId_3", "userName_3", "userPasswordk_3", Level.SILVER, 60, UserService.MIN_RECCOMEND_FOR_GOLD-1));
-		users.add(new User("userId_4", "userName_4", "userPasswordk_4", Level.SILVER, 60, UserService.MIN_RECCOMEND_FOR_GOLD));
-		users.add(new User("userId_5", "userName_5", "userPasswordk_5", Level.GOLD, 100, Integer.MAX_VALUE));
+		users.add(new User("userId_1", "userName_1", "userPasswordk_1", Level.BASIC, UserService.MIN_LOGCOUNT_FOR_SILVER-1, 0, "testEmail"));
+		users.add(new User("userId_2", "userName_2", "userPasswordk_2", Level.BASIC, UserService.MIN_LOGCOUNT_FOR_SILVER, 0, "testEmail"));
+		users.add(new User("userId_3", "userName_3", "userPasswordk_3", Level.SILVER, 60, UserService.MIN_RECCOMEND_FOR_GOLD-1, "testEmail"));
+		users.add(new User("userId_4", "userName_4", "userPasswordk_4", Level.SILVER, 60, UserService.MIN_RECCOMEND_FOR_GOLD, "testEmail"));
+		users.add(new User("userId_5", "userName_5", "userPasswordk_5", Level.GOLD, 100, Integer.MAX_VALUE, "testEmail"));
 	}
 	
 	@Test
