@@ -28,7 +28,9 @@ public class UserServiceTest {
 	UserDao userDao;
 	
 	@Autowired
-	UserService userService;
+	UserServiceImpl userServiceImpl;
+	
+	@Autowired UserServiceTx txUserService;
 	
 	List<User> users;
 	
@@ -42,10 +44,10 @@ public class UserServiceTest {
 	public void setUp() {
 		users = new ArrayList<User>();
 		
-		users.add(new User("userId_1", "userName_1", "userPasswordk_1", Level.BASIC, UserService.MIN_LOGCOUNT_FOR_SILVER-1, 0, "testEmail"));
-		users.add(new User("userId_2", "userName_2", "userPasswordk_2", Level.BASIC, UserService.MIN_LOGCOUNT_FOR_SILVER, 0, "testEmail"));
-		users.add(new User("userId_3", "userName_3", "userPasswordk_3", Level.SILVER, 60, UserService.MIN_RECCOMEND_FOR_GOLD-1, "testEmail"));
-		users.add(new User("userId_4", "userName_4", "userPasswordk_4", Level.SILVER, 60, UserService.MIN_RECCOMEND_FOR_GOLD, "testEmail"));
+		users.add(new User("userId_1", "userName_1", "userPasswordk_1", Level.BASIC, UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER-1, 0, "testEmail"));
+		users.add(new User("userId_2", "userName_2", "userPasswordk_2", Level.BASIC, UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER, 0, "testEmail"));
+		users.add(new User("userId_3", "userName_3", "userPasswordk_3", Level.SILVER, 60, UserServiceImpl.MIN_RECCOMEND_FOR_GOLD-1, "testEmail"));
+		users.add(new User("userId_4", "userName_4", "userPasswordk_4", Level.SILVER, 60, UserServiceImpl.MIN_RECCOMEND_FOR_GOLD, "testEmail"));
 		users.add(new User("userId_5", "userName_5", "userPasswordk_5", Level.GOLD, 100, Integer.MAX_VALUE, "testEmail"));
 	}
 	
@@ -57,7 +59,7 @@ public class UserServiceTest {
 			userDao.add(user);
 		}
 		
-		userService.upgradeLevels();
+		userServiceImpl.upgradeLevels();
 		
 		checkLevelUpgraded(users.get(0), false);
 		checkLevelUpgraded(users.get(1), true);
@@ -70,12 +72,14 @@ public class UserServiceTest {
 	public void upgradeAllOrNothing() throws Exception {
 		
 		//4번째 유저에서 에러가 발생하도록
-		UserService testUserService = new TestUserService(users.get(3).getId());
+		UserServiceImpl testUserService = new TestUserService(users.get(3).getId());
 		
 		//Container에서 관리하지 않으므로 수동 DI
 		testUserService.setUserDao(this.userDao);
-		testUserService.setTransactionManager(this.transactionManager);
 		testUserService.setMailSender(this.mailSender);
+		
+		txUserService.setTransactionManager(this.transactionManager);
+		txUserService.setUserService(testUserService);
 		
 		userDao.deleteAll();
 		
@@ -87,7 +91,7 @@ public class UserServiceTest {
 		try {
 			
 			//TestUserService 업그레이드 작업 중에 예외가 발생해야 한다. 정상 종료라면 문제가 있으니 실패.
-			testUserService.upgradeLevels();
+			txUserService.upgradeLevels();
 			fail("TestUserServiceException expected");
 		} catch (TestUserServiceException e) {
 			//TestUserService가 던져주는 예외를 잡아서 계속 진행되도록 한다
@@ -106,7 +110,7 @@ public class UserServiceTest {
 			assertThat(userUpdate.getLevel(), is(user.getLevel()));
 	}
 	
-	static class TestUserService extends UserService {
+	static class TestUserService extends UserServiceImpl {
 		private String id;
 		
 		//예외를 발생시킬 User 오브젝트의 id를 지정할 수 있게 만든다.
