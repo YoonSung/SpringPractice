@@ -3,6 +3,7 @@ package springbook.user.service;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -19,6 +20,11 @@ public class UserService {
 	public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
 	UserDao userDao;
 	private PlatformTransactionManager transactionManager;
+	private MailSender mailSender;
+	
+	public void setMailSender(MailSender mailSender) {
+		this.mailSender = mailSender;
+	}
 	
 	public void setTransactionManager(PlatformTransactionManager transactionManager) {
 		this.transactionManager = transactionManager;
@@ -64,10 +70,6 @@ public class UserService {
 	}
 
 	private void sendUpgradeEmail(User user) {
-		
-		//MailSender 구현 클래스의 오브젝트를 생성
-		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setHost("mail.server.com");
 		
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setTo(user.getEmail());
