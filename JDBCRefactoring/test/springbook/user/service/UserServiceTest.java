@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
@@ -29,10 +30,10 @@ public class UserServiceTest {
 	@Autowired
 	UserService userService;
 	
-	@Autowired
-	DataSource dataSource;
-	
 	List<User> users;
+	
+	@Autowired
+	PlatformTransactionManager transactionManager;
 	
 	@Before
 	public void setUp() {
@@ -70,7 +71,7 @@ public class UserServiceTest {
 		
 		//Container에서 관리하지 않으므로 수동 DI
 		testUserService.setUserDao(this.userDao);
-		testUserService.setDataSource(this.dataSource);
+		testUserService.setTransactionManager(this.transactionManager);
 		
 		userDao.deleteAll();
 		
