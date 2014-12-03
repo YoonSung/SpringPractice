@@ -18,7 +18,7 @@
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 	
-	<bean id="userService" class="springbook.user.service.UserServiceImpl">
+	<bean id="userServiceImpl" class="springbook.user.service.UserServiceImpl">
 		<property name="userDao" ref="userDao"/>
 		<property name="mailSender" ref="mailSender" />
 	</bean>
@@ -30,4 +30,16 @@
 	<bean id="mailSender" class="springbook.user.service.DummyMailSender">
 		<property name="host" value="mail.server.com" />
 	</bean>
+	
+	<bean id="userService" class="springbook.support.TxProxyFactoryBean">
+		<property name="target" ref="userServiceImpl"/>
+		<property name="transactionManager" ref="transactionManager"/>
+		<property name="pattern" value="upgradeLevels"/>
+		<!-- 
+			스프링은 수정자 메소드의 파라미터의 타입을 확인해서 타입이 Class인 경우, 
+			value로설정한 이름을 가진 Class 오브젝트로 자동 변환해준다. 
+		-->
+		<property name="serviceInterface" value="springbook.user.service.UserService" />	
+	</bean>
+	
 </beans>
