@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
+import springbook.user.handler.TransactionHandler;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:/applicationContext.xml")
@@ -29,8 +31,6 @@ public class UserServiceTest {
 	
 	@Autowired
 	UserServiceImpl userServiceImpl;
-	
-	@Autowired UserServiceTx txUserService;
 	
 	List<User> users;
 	
@@ -78,8 +78,17 @@ public class UserServiceTest {
 		testUserService.setUserDao(this.userDao);
 		testUserService.setMailSender(this.mailSender);
 		
-		txUserService.setTransactionManager(this.transactionManager);
-		txUserService.setUserService(testUserService);
+		
+		TransactionHandler txHandler = new TransactionHandler();
+		txHandler.setTarget(testUserService);
+		txHandler.setTransactionManager(transactionManager);
+		txHandler.setPattern("upgradeLevels");
+		UserService txUserService = (UserService)Proxy.newProxyInstance(
+				getClass().getClassLoader(), 
+				new Class[]{UserService.class}, 
+				txHandler
+		);
+		
 		
 		userDao.deleteAll();
 		
