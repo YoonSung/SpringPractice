@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import org.junit.Test;
+import org.springframework.aop.framework.ProxyFactoryBean;
 
 import static org.hamcrest.CoreMatchers.*;
 
@@ -46,5 +47,17 @@ public class ReflectionTest {
 		assertThat(proxieHello.sayHello("Yoon"), is("HELLO YOON"));
 		assertThat(proxieHello.sayHi("Yoon"), is("HI YOON"));
 		assertThat(proxieHello.sayThankYou("Yoon"), is("THANK YOU YOON"));
+	}
+	
+	@Test
+	public void proxyFactoryBean() throws Exception {
+		ProxyFactoryBean pfBean = new ProxyFactoryBean();
+		pfBean.setTarget(new HelloTarget());
+		pfBean.addAdvice(new UppercaseAdvice());
+		
+		Hello proxiedHello = (Hello) pfBean.getObject();
+		assertThat(proxiedHello.sayHello("Yoon"), is("HELLO YOON"));
+		assertThat(proxiedHello.sayHi("Yoon"), is("HI YOON"));
+		assertThat(proxiedHello.sayThankYou("Yoon"), is("THANK YOU YOON"));
 	}
 }
