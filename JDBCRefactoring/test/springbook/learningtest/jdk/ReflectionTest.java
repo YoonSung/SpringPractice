@@ -3,6 +3,7 @@ package springbook.learningtest.jdk;
 import static org.junit.Assert.*;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 import org.junit.Test;
 
@@ -33,5 +34,17 @@ public class ReflectionTest {
 		assertThat(hello.sayHello("Yoon"), is("Hello Yoon"));
 		assertThat(hello.sayHi("Yoon"), is("Hi Yoon"));
 		assertThat(hello.sayThankYou("Yoon"), is("Thank You Yoon"));
+	}
+	
+	@Test
+	public void invokeHandlerProxy() throws Exception {
+		Hello proxieHello = (Hello)Proxy.newProxyInstance(
+				getClass().getClassLoader(), 
+				new Class[]{Hello.class}, 
+				new UppercaseHandler(new HelloTarget()));
+		
+		assertThat(proxieHello.sayHello("Yoon"), is("HELLO YOON"));
+		assertThat(proxieHello.sayHi("Yoon"), is("HI YOON"));
+		assertThat(proxieHello.sayThankYou("Yoon"), is("THANK YOU YOON"));
 	}
 }
