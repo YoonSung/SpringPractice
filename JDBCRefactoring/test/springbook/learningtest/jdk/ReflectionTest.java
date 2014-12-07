@@ -86,6 +86,6 @@ public class ReflectionTest {
 		assertThat(proxiedHello.sayHi("Yoon"), is("HI YOON"));
 		
 		// 메소드 이름이 포인트컷의 선정조건에 맞지 않으므로, 부가기능이 적용되지 않는다. 
-		assertThat(proxiedHello.sayThankYou("Yoon"), is("Thank you YOON"));
+		assertThat(proxiedHello.sayThankYou("Yoon"), is("Thank you Yoon"));
 	}
 }
