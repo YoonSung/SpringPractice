@@ -26,4 +26,12 @@ public class ReflectionTest {
 		Method charAtMethod = String.class.getMethod("charAt", int.class);
 		assertThat((Character)charAtMethod.invoke(name, 0), is('S'));
 	}
+	
+	@Test
+	public void simpleProxy() throws Exception {
+		Hello hello = new HelloTarget();
+		assertThat(hello.sayHello("Yoon"), is("Hello Yoon"));
+		assertThat(hello.sayHi("Yoon"), is("Hi Yoon"));
+		assertThat(hello.sayThankYou("Yoon"), is("Thank You Yoon"));
+	}
 }
